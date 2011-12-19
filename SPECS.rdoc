@@ -1,0 +1,13 @@
+== TODOS
+
+=== Configuración Base del Sistema
+Debe existir un archivo de configuración "POSAdmin_Config.yml" el cual contiene:
+* Usuario administrador de LDAP
+* Contraseña de Usuario Administrador de LDAP
+
+Esta información debe ser leída al iniciar la aplicación Rails y debe ser puesta a disposición en un módulo o clase inmutable llamada *POSAdmin::Login* la cual contendrá 2 variables:
+* username, y
+* password
+
+=== Creación de Branch Servers
+*TBD*
