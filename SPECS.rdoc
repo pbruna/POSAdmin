@@ -9,5 +9,9 @@ Esta información debe ser leída al iniciar la aplicación Rails y debe ser pue
 * username, y
 * password
 
+
+=== Conexión a LDAP
+Se debe crear un modulo de configuracion, quizas dentro del mismo módulo Login
+
 === Creación de Branch Servers
 *TBD*

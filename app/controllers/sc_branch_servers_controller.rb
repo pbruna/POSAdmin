@@ -1,0 +1,5 @@
+class ScBranchServersController < ApplicationController
+  
+  
+  
+end
