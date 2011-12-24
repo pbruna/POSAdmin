@@ -27,6 +27,12 @@ class ScLocationTest < ActiveSupport::TestCase
     sc_location.save
     assert(sc_location.object_class.include?("top"), "No se agrego la objectClass top")
   end
+  
+  test "ScLocations#branch_servers debe devolver un array con los servidores" do
+    location = ScLocation.all.first
+    branch_servers = location.branch_servers
+    assert(branch_servers.kind_of?(Array), "branch_servers debe ser un Array")
+  end
 
 
 end

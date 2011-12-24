@@ -16,6 +16,12 @@ class OrganizationalUnitTest < ActiveSupport::TestCase
     ou.save
     assert(ou.object_class.include?("top"), "No se agrego la objectClass top")
   end
+  
+  test "OrganizationalUnit#locations debe devolver un array con los locales" do
+    ou = OrganizationalUnit.all.first
+    locations = ou.locations
+    assert(locations.kind_of?(Array), "locations debe ser un Array")
+  end
 
 
 end

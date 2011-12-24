@@ -1,0 +1,17 @@
+<div class="topbar">
+	<div class="topbar-inner">
+		<div class="container-fluid">
+			<%= link_to "POSAdmin", controlcenter_path(), :class => "brand" %>
+			<ul class="nav">
+				<li class="active"><%= link_to "Inicio", controlcenter_path() %></li>
+				<li><%= link_to "Locales" %>
+			</ul>
+			<form  action>
+				<input type="text" placeholder="Buscar" class="span6">
+			</form>
+			<p class="pull-right">
+				<%= link_to "Preferencias"%> | <%= link_to "Salir" %>
+			</p>
+		</div>
+	</div>
+</div>

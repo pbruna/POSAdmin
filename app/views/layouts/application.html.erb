@@ -7,15 +7,17 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<header style="height: 50px; border: solid 1px">
-</header>
+	<div style="margin-bottom: 60px">
+		<%= render "shared/header" %>
+	</div>
 
-<div class="container-fluid">
-	<div class="sidebar">
+	<div class="container-fluid">
+		<div class="sidebar">
+			<%= render :partial => "shared/sidebar" %>
+		</div>
+		<div class="content">
+			<%= yield %>
+		</div>
 	</div>
-	<div class="content">
-		<%= yield %>
-	</div>
-</div>
 </body>
 </html>

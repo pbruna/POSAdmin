@@ -1,0 +1,59 @@
+<%= form_tag(:action => "create") do %>
+
+	<fieldset>
+		<legend>Choose Location</legend>
+		<% if params[:action] == "edit" %>
+		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection, scLocation.parent_dn)  %>
+		<% else %>
+		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection)  %>
+		<% end %>
+		<hr/>
+	</fieldset>
+	<fieldset>
+		<legend>Local Setup</legend>
+		<div class="row">
+			<%= column_input_div("Hostname", "scLocation[cn]", :placeholder => 'Name of the host') %>
+			<%= column_input_div("Gateway", "scLocation[scDefaultGw]") %>
+		</div>
+		<div class="row">
+			<%= column_input_div("Network Address", "scLocation[ipNetworkNumber]") %>
+			<%= column_input_div("Network Mask", "scLocation[ipNetmaskNumber]") %>
+		</div>
+		<div class="row">
+			<%= column_input_div("DHCP Dinamic Address start", "scLocation[scDhcpRange_start]") %>
+			<%= column_input_div("DHCP Dinamic Address end", "scLocation[scDhcpRange_end]") %>
+		</div>
+		<div class="row">
+			<%= column_input_div("DHCP Fixed Address start", "scLocation[scDhcpFixedRange_start]") %>
+			<%= column_input_div("DHCP Fixed Address end", "scLocation[scDhcpFixedRange_end]") %>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>POS Devices Preferences</legend>
+		<div class="row">
+			<%= column_input_div("Name Prefix", "scLocation[scWorkstationBaseName]") %>
+			<%= column_input_div("Number Prefix", "scLocation[scEnumerationMask]") %>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Activation Password</legend>
+		<div class="row">
+		<div class='span5'>
+			<p>
+				<strong>Password</strong><br/>
+				<%= password_field_tag "scLocation[userPassword]", nil, :required => true %>
+			</p>
+		</div>
+		<div class='span5'>
+			<p>
+				<strong>Password Confirmation</strong><br/>
+				<%= password_field_tag "scLocation[userPassword]", nil, :required => true %>
+			</p>
+		</div>
+	 	</div>
+	</fieldset>
+
+
+  <%= submit_tag "Save changes", :class => "btn large primary" %>
+  <button type="reset" class="btn large">Cancel</button>
+<% end -%>

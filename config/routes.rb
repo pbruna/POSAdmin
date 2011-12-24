@@ -1,7 +1,8 @@
 POSAdmin::Application.routes.draw do
   resource :controlcenter
   #match 'controlcenter' => "controlcenter#show"
-  resources :scbranchservers
+  resources :scbranchservers, :controller => "ScBranchServers"
+  resources :organizational_units
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
