@@ -15,6 +15,10 @@ module ScNetworkCard
   model_bases self.base_dn
   model_objectclasses :scNetworkcard
 
+  def ip_address
+    ipHostnumber.first
+  end
+
   def after_create( mods )
     self.object_class << "top"
     self.save

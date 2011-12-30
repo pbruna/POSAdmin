@@ -1,3 +1,15 @@
 // Place all the styles related to the organizational_units controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#ou-stats {
+	border: 0px;
+	margin-top: 10px;
+	
+	td {
+		font-size: 24px;
+		border: 0px;
+		padding: 0px 10px 20px 10px;
+	}
+	
+}

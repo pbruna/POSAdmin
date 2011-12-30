@@ -1,0 +1,36 @@
+<%= content_header("Organizational Unit: #{@organizational_unit.name.titleize}") %>
+<%= link_to "Edit Organizational Unit", edit_organizational_unit_path(@organizational_unit.dn), :class => "content-header-menu" %>
+<div style="height: 70px">
+	<div style="float: right; margin-right: -140px">
+		<table id="ou-stats">
+			<tr>
+				<td style="text-align: left">Branch Servers</td>
+				<td style="text-align: right"><%= @organizational_unit.brachservers_qty %></td>
+			</tr>
+			<tr>
+				<td style="text-align: left">POS Deveices</td>
+				<td style="text-align: right"><%= @organizational_unit.posdevices_qty %></td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<p>
+			<%= @organizational_unit.description_text %>
+		</p>
+	</div>
+	
+</div>
+</div>
+<div class="content">
+	<h2>Branchs</h2>
+	<br/>
+	<table id="branchs" class="zebra-striped">
+		<tr>
+			<th>Name</th>
+			<th>IP Address</th>
+			<th>Address</th>
+			<th>POS Devices</th>
+		</tr>
+		<%= render :partial => "branch", :collection => @organizational_unit.branchs, :as => :branch %>
+	</table>
+</div>

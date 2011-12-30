@@ -8,7 +8,7 @@
 */
 
 .content {
-	background-color: whiteSmoke;
+	background-color: white;
 	margin-bottom: 20px;
 	padding: 10px 19px 20px 19px;
 	min-height: 20px;
@@ -25,11 +25,20 @@
 .content-header {
 	border-bottom: solid #BFBFBF 1px;
 	margin: 0px -19px 10px -19px;
+	background-color: whiteSmoke;
 }
 
 .content-header h1 {
 	padding-left: 10px;
 	margin-bottom: 2px;
+	padding-top: 9px;
+	margin-top: -9px;
+}
+
+.content-header-menu {
+	float: right;
+	margin-top: -30px;
+	margin-bottom: 30px;
 }
 
 fieldset legend {

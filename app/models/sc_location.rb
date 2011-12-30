@@ -39,12 +39,20 @@ module ScLocation
     scDhcpFixedRange.split(/,/).last
   end
   
-  def branch_servers
+  def branch_server
      array = []
       ScBranchServer.filter(:objectclass => "scBranchServer").all.each do |object|
         array << object if object.parent.dn == "cn=server,#{self.dn}"
       end
-      array
+      array.first
+  end
+  
+  def pos_devices_qty
+    "TO BE DONE"
+  end
+  
+  def server_ip_address
+    branch_server.network_card_ip_address
   end
   
   def self.all
@@ -52,18 +60,18 @@ module ScLocation
   end
   
   def self.create_new(params)
-    ou = create("cn=#{params[:cn]},#{params[:parent]}")
-    ou.scDhcpExtern = "FALSE"
-    ou.scEnumerationMask = params[:scEnumerationMask]
-    ou.scDhcpRange = "#{params[:scDhcpRange_start]},#{params[:scDhcpRange_end]}"
-    ou.scDefaultGw = params[:scDefaultGw]
-    ou.scWorkstationBaseName = params[:scWorkstationBaseName]
-    ou.ipNetmaskNumber = params[:ipNetmaskNumber]
-    ou.scDynamicIp = true
-    ou.ipNetworkNumber = params[:ipNetworkNumber]
-    ou.scDhcpFixedRange = "#{params[:scDhcpFixedRange_start]},#{params[:scDhcpFixedRange_end]}"
-    ou.userPassword = params[:userPassword]
-    ou
+    sc_location = create("cn=#{params[:cn]},#{params[:parent]}")
+    sc_location.scDhcpExtern = "FALSE"
+    sc_location.scEnumerationMask = params[:scEnumerationMask]
+    sc_location.scDhcpRange = "#{params[:scDhcpRange_start]},#{params[:scDhcpRange_end]}"
+    sc_location.scDefaultGw = params[:scDefaultGw]
+    sc_location.scWorkstationBaseName = params[:scWorkstationBaseName]
+    sc_location.ipNetmaskNumber = params[:ipNetmaskNumber]
+    sc_location.scDynamicIp = true
+    sc_location.ipNetworkNumber = params[:ipNetworkNumber]
+    sc_location.scDhcpFixedRange = "#{params[:scDhcpFixedRange_start]},#{params[:scDhcpFixedRange_end]}"
+    sc_location.userPassword = params[:userPassword]
+    sc_location
   end
   
   def after_create( mods )

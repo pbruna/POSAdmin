@@ -1,0 +1,16 @@
+<%= form_tag({:action => "update"}, {:method => :put}) do %>
+  
+	<fieldset>
+		<p>
+			<strong>Name</strong><br/>
+			<%= text_field_tag "organizational_unit[name]", value_for_field(organizational_unit, "name"), :required => true %>
+		</p>
+		<p>
+			Description </br>
+			<%= text_area_tag "organizational_unit[description]", value_for_field(organizational_unit, "description_text") %>
+		</p>
+	</fieldset>
+	<%= submit_tag "Save Organizational Unit", :class => "btn large primary" %>
+	<button type="reset" class="btn large">Cancel</button>
+
+<% end -%>
