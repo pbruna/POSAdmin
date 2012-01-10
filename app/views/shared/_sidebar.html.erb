@@ -4,11 +4,7 @@
 	<ul>
 		<li><%= link_to "Organizational Units", organizational_units_path() %></li>
 		<li>
-			<%= link_to "Branch Servers" %>
-			<ul>
-				<li><%= link_to "New Branch Server", new_scbranchserver_path() %>
-			</ul>
-			
+			<%= link_to "Branch Servers", scbranchservers_path() %>
 		</li>
 		<li><%= link_to "POS Devices" %></li>
 	</ul>
@@ -16,14 +12,10 @@
 <div class="well">
 	<h4><%= base_dn %> </h4>
 	<ul>
-		<% @ous.each do |ou| %>
+		<% @organizational_units.each do |ou| %>
 			<li>
-				<%= link_to ou.name, organizational_unit_path(ou) %>
-				<ul>
-					<% ou.locations.each do |location| %>
-						<li><%= link_to location.name, edit_scbranchserver_path(location.dn) %></li>
-					<% end %>		
-				</ul>
+				<%= link_to ou.short_name, organizational_unit_path(ou.dn) %>
+				
 			</li>
 		<% end %>
 	</ul>

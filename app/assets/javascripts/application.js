@@ -6,5 +6,11 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.jstree.js
 //= require_tree .
+
+$(document).ready(function() {
+	$("button, type['reset']").bind('click', function() {
+		var referer = $(this).attr("data-referer");
+		window.location = referer;
+	});
+});

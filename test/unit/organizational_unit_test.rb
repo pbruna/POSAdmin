@@ -39,6 +39,15 @@ class OrganizationalUnitTest < ActiveSupport::TestCase
     @ou.save
     assert_equal(description, @ou.description_text)
   end
+  
+  test "El metodo update debe actualizar los atributos" do
+    @ou = OrganizationalUnit.create(@dn)
+    @ou.save
+    attributes = {:description => "juanito", :dn => "ou=quillota,o=cruzverde,c=cl"}
+    @ou.update(attributes)
+    assert_equal("jaunito", @ou.description)
+    assert_equal("ou=quillota,o=cruzverde,c=cl", @ou.dn)
+  end
 
 
 end

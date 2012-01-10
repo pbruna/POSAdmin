@@ -2,34 +2,33 @@
 # - ou: must
 # - description: may
 
-include PosAdmin::Connection
+# include PosAdmin::Connection
+include Global::Instance
 
 module OrganizationalUnit
   extend Treequel::Model::ObjectClass
+  extend Global::Class
 
   model_class Treequel::Model
   model_bases self.base_dn
   model_objectclasses :organizationalUnit
+  main_attribute "ou"
 
 
-  def name
-    ou.first
-  end
-
-  def description_text
-    description.join("\n")
-  end
-
-  def name=(name)
-    ou=name
+  def remove_only_if_empty
+    begin
+      self.destroy
+    rescue Exception
+      false
+    end
   end
 
   def locations
-    array = []
-    ScLocation.filter(:objectclass => "scLocation").all.each do |object|
-      array << object if object.parent.dn == self.dn
+    @locations = []
+    filter(:objectclass => "scLocation").all.each do |object|
+      @locations << ScLocation.create(object.dn)
     end
-    array
+    @locations
   end
 
   def branchs
@@ -44,10 +43,6 @@ module OrganizationalUnit
     "To Be Done"
   end
 
-  def self.all
-    Treequel::Model.directory.filter(:objectClass => self.model_objectclasses)
-  end
-  
   def self.find(params)
     array = params.split(/,/)
     hash = {}
@@ -64,7 +59,7 @@ module OrganizationalUnit
 
   def self.create_new(params)
     params["description"] ||= ""
-    organizational_unit = self.create("ou=#{params['name']},#{self.base_dn}")
+    organizational_unit = self.create("ou=#{params['short_name']},#{self.base_dn}")
     organizational_unit.description = params["description"]
     organizational_unit
   end
@@ -73,9 +68,9 @@ module OrganizationalUnit
     self.object_class << "top"
     self.save
   end
-  
+
   def after_save (mods)
-    # To not have 2 description attributes    
+    # To not have 2 description attributes
     if self.description.size > 1
       text = self.description.last
       self.delete(:description)
@@ -83,7 +78,7 @@ module OrganizationalUnit
       self.save
     end
   end
-  
+
   def before_update( mods )
     self.delete("description")
   end

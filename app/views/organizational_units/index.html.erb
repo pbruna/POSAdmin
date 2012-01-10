@@ -4,14 +4,14 @@
 
 <table class="zebra-striped">
 	<tr>
-		<td>Name</td>
-		<td>DN</td>
-		<td>Branchs</td>
-		<td>POS Devices</td>
+		<th>Name</th>
+		<th>DN</th>
+		<th>Branchs</th>
+		<th>POS Devices</th>
 	</tr>
 	<% @organizational_units.each do |ou| %>
 		<tr>
-			<td><%= link_to ou.name, organizational_unit_path(ou.dn) %></td>
+			<td><%= link_to ou.short_name, organizational_unit_path(ou.dn) %></td>
 			<td><%= ou.dn %></td>
 			<td><%= ou.brachservers_qty %></td>
 			<td><%= ou.posdevices_qty %></td>

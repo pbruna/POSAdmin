@@ -5,15 +5,19 @@
 		<% if params[:action] == "edit" %>
 		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection, scLocation.parent_dn)  %>
 		<% else %>
-		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection)  %>
+		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection, params[:location])  %>
 		<% end %>
 		<hr/>
 	</fieldset>
 	<fieldset>
-		<legend>Local Setup</legend>
+		<legend>Network Setup</legend>
 		<div class="row">
 			<%= column_input_div("Hostname", "scLocation[cn]", :placeholder => 'Name of the host') %>
 			<%= column_input_div("Gateway", "scLocation[scDefaultGw]") %>
+		</div>
+		<div class="row">
+			<%= column_input_div("Network Card", "scLocation[scNetworkcard][scDevice]", :placeholder => 'Ex: eth0') %>
+			<%= column_input_div("IP Address", "scLocation[scNetworkcard][ipHostNumber]", :placeholder => "Network Card IP") %>
 		</div>
 		<div class="row">
 			<%= column_input_div("Network Address", "scLocation[ipNetworkNumber]") %>
@@ -29,6 +33,16 @@
 		</div>
 	</fieldset>
 	<fieldset>
+		<legend>Services</legend>
+		<table class="services">
+			<tr>
+				<td><%= check_box_tag "scService[dhcp]" %> DHCP </td>
+				<td><%= check_box_tag "scService[dns]" %> DNS </td>
+				<td><%= check_box_tag "scService[tftp]" %> TFTP </td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
 		<legend>POS Devices Preferences</legend>
 		<div class="row">
 			<%= column_input_div("Name Prefix", "scLocation[scWorkstationBaseName]") %>
@@ -37,23 +51,10 @@
 	</fieldset>
 	<fieldset>
 		<legend>Activation Password</legend>
-		<div class="row">
-		<div class='span5'>
-			<p>
-				<strong>Password</strong><br/>
 				<%= password_field_tag "scLocation[userPassword]", nil, :required => true %>
-			</p>
-		</div>
-		<div class='span5'>
-			<p>
-				<strong>Password Confirmation</strong><br/>
-				<%= password_field_tag "scLocation[userPassword]", nil, :required => true %>
-			</p>
-		</div>
-	 	</div>
 	</fieldset>
 
 
   <%= submit_tag "Save changes", :class => "btn large primary" %>
-  <button type="reset" class="btn large">Cancel</button>
+  <button type="reset" class="btn large" data-referer="<%= request.env['HTTP_REFERER'] %>">Cancel</button>
 <% end -%>

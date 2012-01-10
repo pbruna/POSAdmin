@@ -1,0 +1,22 @@
+<%= content_header("Branch Servers") %>
+<div class="content-header-menu">
+	<%= link_to "New Branch Server", new_scbranchserver_path()%>
+</div>
+
+
+<table class="zebra-striped">
+	<tr>
+		<th>Name</th>
+		<th>Hostname</th>
+		<th>Organizational Unit</th>
+		<th>POS Devices</th>
+	</tr>
+	<% @branch_servers.each do |bs| %>
+		<tr>
+			<td><%= link_to bs.sc_location_name, scbranchserver_path(bs.sc_location_dn) %></td>
+			<td><%= bs.fqdn %></td>
+			<td><%= bs.ou_name %></td>
+			<td><%= bs.posdevices_qty %></td>
+		</tr>
+	<% end %>
+</table>

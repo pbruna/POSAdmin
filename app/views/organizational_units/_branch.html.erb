@@ -1,6 +1,6 @@
 <tr>
-	<td><%= link_to branch.name, scbranchserver_path(branch.branch_server.dn) %></td>
-	<td><%= branch.server_ip_address %></td>
+	<td><%= link_to branch.short_name, scbranchserver_path(branch.dn) %></td>
 	<td><%= branch.ipNetworkNumber %></td>
+	<td><%= branch.ipNetmaskNumber %></td>
 	<td><%= branch.pos_devices_qty %></td>
 </tr>

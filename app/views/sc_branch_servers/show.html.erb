@@ -1,1 +1,58 @@
-<h1><%= @branch_server.fqdn %></h1>
+<%= content_header("Branch Server: #{@branch_server.short_name} at #{@branch_server.ou_name.titleize}") %>
+<div class="content-header-menu">
+	<%= link_to "Edit Branch Server", edit_scbranchserver_path(@branch_server.dn)  %> |
+	<%= link_to "Delete Branch Server", @branch_server.dn, :confirm => "Really want to DELETE this Branch Server?",:method => :delete %>
+</div>
+<div>
+<div id="branch_server_services">
+	<h4>Services</h4>
+	<ul>
+		<% @branch_server.services.each do |service| %>
+			<li><%= "#{service.scDnsName.first.upcase} -> #{service.scServiceStatus}" %></li>
+		<% end %>
+	</ul>
+</div>
+<div id="sc_location_setup">
+	<h3>Network Setup</h3>
+	<table>
+		<tr>
+			<td class="left">
+				<strong>Device</strong>: <%= @branch_server.branch_server_network_card %>
+			</td>
+			<td>
+				<strong>IP Address</strong>: <%= @branch_server.branch_server_ip_address %>
+			</td>
+		</tr>
+		<tr>
+			<td class="left">
+				<strong>Network Address</strong>: <%= @branch_server.ipNetworkNumber %>
+			</td>
+			<td>
+				<strong>Netmask</strong>: <%= @branch_server.ipNetmaskNumber %>
+			</td>
+		</tr>
+		<tr>
+			<td class="left">
+				<strong>Gateway</strong>: <%= @branch_server.scDefaultGw_address %>
+			</td>
+		</tr>
+	</table>
+	<h3>DHCP Setup</h3>
+	<table>
+		<tr>
+			<td class="left">
+				<strong>Dinamic Address Range</strong></br>
+				<%= "#{@branch_server.scDhcpRange_start} - #{@branch_server.scDhcpRange_end}" %>
+			</td>
+			<td>
+				<strong>Fixed Address Range</strong></br>
+				<%= "#{@branch_server.scDhcpFixedRange_start} - #{@branch_server.scDhcpFixedRange_end}" %>
+			</td>
+		</tr>
+	</table>
+</div>
+</div>
+</div>
+<div class="content">
+	<h4>POS Devices</h4>
+</div>

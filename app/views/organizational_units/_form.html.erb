@@ -1,9 +1,9 @@
-<%= form_tag({:action => "update"}, {:method => :put}) do %>
+<%= form_tag(options_for_form_tag(action)[0],options_for_form_tag(action)[1]) do %>
   
 	<fieldset>
 		<p>
 			<strong>Name</strong><br/>
-			<%= text_field_tag "organizational_unit[name]", value_for_field(organizational_unit, "name"), :required => true %>
+			<%= text_field_tag "organizational_unit[short_name]", value_for_field(organizational_unit, "short_name"), :required => true %>
 		</p>
 		<p>
 			Description </br>
@@ -11,6 +11,6 @@
 		</p>
 	</fieldset>
 	<%= submit_tag "Save Organizational Unit", :class => "btn large primary" %>
-	<button type="reset" class="btn large">Cancel</button>
+	<button type="reset" class="btn large" data-referer="<%= request.env['HTTP_REFERER'] %>">Cancel</button>
 
 <% end -%>

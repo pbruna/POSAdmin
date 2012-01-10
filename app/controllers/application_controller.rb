@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   
   private
   def render_sidebar
-    @ous = OrganizationalUnit.all
+    @organizational_units = OrganizationalUnit.all
   end
   
 end
