@@ -7,8 +7,8 @@
 <div id="branch_server_services">
 	<h4>Services</h4>
 	<ul>
-		<% @branch_server.services.each do |service| %>
-			<li><%= "#{service.scDnsName.first.upcase} -> #{service.scServiceStatus}" %></li>
+		<% @branch_server.services.each do |service, status| %>
+			<li><%= "#{service.upcase} -> #{status}" %></li>
 		<% end %>
 	</ul>
 </div>

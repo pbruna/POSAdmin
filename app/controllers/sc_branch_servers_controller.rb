@@ -1,4 +1,5 @@
 class ScBranchServersController < ApplicationController
+  before_filter :initialize_branchserver_factory, :only => [:create, :update]
 
   def index
     @branch_servers = ScBranchServer.all
@@ -10,7 +11,11 @@ class ScBranchServersController < ApplicationController
   end
 
   def new
-    @scLocation = Class.new
+    @scLocation = Class.new do
+      def self.method_missing(method,value)
+        nil
+      end
+    end
     @organizational_unit_collection = OrganizationalUnit.for_select
   end
 
@@ -19,18 +24,15 @@ class ScBranchServersController < ApplicationController
     @organizational_unit_collection = OrganizationalUnit.for_select
   end
 
-  def create
-    network_card = params[:scLocation].delete("scNetworkcard")
-    @scLocation = ScLocation.create_new(params)
-    @scNetworkCard = ScNetworkCard.create_new(network_card,@scLocation)
-    if @scLocation.save && @scNetworkCard.save && ScService.create_and_save(params[:scService],@scLocation)
+  def create    
+    if @branch_server_factory.save
       flash[:notice] = "Branch Server created!"
-      redirect_to scbranchserver_path(@scLocation.dn)
+      redirect_to scbranchserver_path(@branch_server_factory.location_dn)
     else
       format.html { render :action => "new"}
     end
   end
-  
+
   def destroy
     @scLocation = ScLocation.create(params[:id])
     if @scLocation.delete_with_childrens!
@@ -40,6 +42,21 @@ class ScBranchServersController < ApplicationController
       flash[:error] = "An Error ocurred while trying to delete Branch Server"
       redirect_to scbranchserver_path(@scLocation.dn)
     end
+  end
+
+  def update
+    if @branch_server_factory.update
+      flash[:notice] = "Branch Server updated correctly"
+      redirect_to scbranchserver_path(@branch_server_factory.sc_location.dn)
+    else
+      flash[:error] = "Error while updating Branch Server"
+      redirect_to organizational_units_path
+    end
+  end
+
+  private
+  def initialize_branchserver_factory
+    @branch_server_factory = BranchServerFactory.new(params)
   end
 
 end

@@ -6,14 +6,16 @@
 # - scModulOption: may
 # - ipNetmaskNumber: may
 
-include PosAdmin::Connection
+include Global::Instance
 
 module ScNetworkCard
   extend Treequel::Model::ObjectClass
+  extend Global::Class
 
   model_class Treequel::Model
   model_bases self.base_dn
   model_objectclasses :scNetworkcard
+  main_attribute "scDevice"
 
   def ip_address
     ipHostnumber.first

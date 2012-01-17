@@ -15,10 +15,15 @@ module ScService
     parent_dn = "cn=branch_server,cn=server,#{grand_grand_parent.dn}"
     SERVICES.each do |service_name|
       begin
-        status = params[service_name.to_sym].nil? ? false : true
+        status = params[service_name.to_sym].nil? ? "FALSE" : "TRUE"
         s = create_service(service_name,parent_dn,grand_grand_parent.server_ip_address,status)
-        s.save
-        s.modify(:scServiceStatus => "FALSE") unless status
+        unless s.exists?
+          s.save
+        else
+          s.modify(:scServiceStatus => "TRUE")
+          s.save
+        end
+        s.modify(:scServiceStatus => status)
       rescue Exception => e
         puts e.message
         puts e.backtrace.inspect
@@ -26,6 +31,7 @@ module ScService
       end
     end
     
+    true
   end
 
   def after_create( mods )

@@ -14,11 +14,11 @@ module ScBranchServer
   end
   
   def services
-    array = Array.new
+    hash = Hash.new
     ScService.all.each do |object|
-      array << object if object.parent.dn == "#{self.dn}"
+      hash[object.cn.first] = object.scServiceStatus if object.parent.dn == "#{self.dn}"
     end
-    array
+    hash
   end
 
   def sc_location_dn
@@ -44,6 +44,10 @@ module ScBranchServer
 
   def network_card_device
     network_card.device unless network_card.nil?
+  end
+  
+  def network_card_dn
+    network_card.dn unless network_card.nil?
   end
 
   def fqdn

@@ -1,4 +1,4 @@
-<%= form_tag(:action => "create") do %>
+<%= form_tag(options_for_form_tag(action)[0],options_for_form_tag(action)[1]) do %>
 
 	<fieldset>
 		<legend>Choose Location</legend>
@@ -36,9 +36,9 @@
 		<legend>Services</legend>
 		<table class="services">
 			<tr>
-				<td><%= check_box_tag "scService[dhcp]" %> DHCP </td>
-				<td><%= check_box_tag "scService[dns]" %> DNS </td>
-				<td><%= check_box_tag "scService[tftp]" %> TFTP </td>
+				<td><%= check_box_tag "scLocation[scService][dhcp]", 1, scLocation.scService("dhcp") %> DHCP </td>
+				<td><%= check_box_tag "scLocation[scService][dns]",1, scLocation.scService("dns") %> DNS </td>
+				<td><%= check_box_tag "scLocation[scService][tftp]",1, scLocation.scService("tftp") %> TFTP </td>
 			</tr>
 		</table>
 	</fieldset>

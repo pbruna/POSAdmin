@@ -43,7 +43,6 @@ module  Global
     end
 
     def short_name=(name)
-      main_attr = main_attribute
       send("#{main_attribute}=",name)
     end
 
@@ -58,20 +57,17 @@ module  Global
     def ou_name
       ou_dn.split(/,/)[0].split(/\=/)[1]
     end
-
-    def update_attributes(attributes)
-      rdn=""
-      new_main_attribute = ""
-      if attributes[:short_name]
-        rdn="#{main_attribute}=#{attributes[:short_name]},#{base}"
-        new_main_attribute = attributes[:short_name]
-        attributes.delete("short_name")
-      end
-      modify(attributes)
-      unless rdn.blank?
-        send("#{main_attribute}=",new_main_attribute)
+    
+    def update!(attributes)
+      if attributes[main_attribute.to_sym]
+        rdn = "#{main_attribute}=#{attributes[main_attribute.to_sym]},#{base}"
+        attributes.delete(main_attribute.to_sym) # We remove the main attribute to avoid a LDAP Error
+        update(attributes)
         move(rdn)
+      else
+        update(attributes)
       end
+      self
     end
 
   end

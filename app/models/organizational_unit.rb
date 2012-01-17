@@ -15,6 +15,21 @@ module OrganizationalUnit
   main_attribute "ou"
 
 
+  def update_attributes(attributes)
+    rdn=""
+    new_main_attribute = ""
+    if attributes[:short_name]
+      rdn="#{main_attribute}=#{attributes[:short_name]},#{base}"
+      new_main_attribute = attributes[:short_name]
+      attributes.delete("short_name")
+    end
+    modify(attributes)
+    unless rdn.blank?
+      send("#{main_attribute}=",new_main_attribute)
+      move(rdn)
+    end
+  end
+
   def remove_only_if_empty
     begin
       self.destroy
@@ -42,6 +57,8 @@ module OrganizationalUnit
   def posdevices_qty
     "To Be Done"
   end
+
+
 
   def self.find(params)
     array = params.split(/,/)
