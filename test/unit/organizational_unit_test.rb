@@ -23,31 +23,22 @@ class OrganizationalUnitTest < ActiveSupport::TestCase
     assert(locations.kind_of?(Array), "locations debe ser un Array")
   end
   
-  test "Al editar no se debe agregar description, se debe reemplazar" do
-    @ou = OrganizationalUnit.create(@dn)
-    @ou.description = "Description 1"
-    @ou.save
-    @ou.description = "Description 2"
-    @ou.save
-    assert_equal(1, @ou.description.size)
-  end
-  
   test "La descripcion debe ser la misma que la que se ingreso" do
-    @ou = OrganizationalUnit.create(@dn)
+    ou = OrganizationalUnit.create(@dn)
     description = "Description 1"
-    @ou.description = description
-    @ou.save
-    assert_equal(description, @ou.description_text)
+    ou.description = description
+    ou.save
+    assert_equal(description, ou.description.first)
   end
   
-  test "El metodo update debe actualizar los atributos" do
-    @ou = OrganizationalUnit.create(@dn)
-    @ou.save
-    attributes = {:description => "juanito", :dn => "ou=quillota,o=cruzverde,c=cl"}
-    @ou.update(attributes)
-    assert_equal("jaunito", @ou.description)
-    assert_equal("ou=quillota,o=cruzverde,c=cl", @ou.dn)
-  end
+  # test "El metodo update debe actualizar los atributos" do
+  #   @ou = OrganizationalUnit.create(@dn)
+  #   @ou.save
+  #   attributes = {:description => "juanito", :dn => "ou=quillota,o=cruzverde,c=cl"}
+  #   @ou.update(attributes)
+  #   assert_equal("jaunito", @ou.description)
+  #   assert_equal("ou=quillota,o=cruzverde,c=cl", @ou.dn)
+  # end
 
 
 end

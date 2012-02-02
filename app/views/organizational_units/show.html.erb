@@ -18,14 +18,16 @@
 	</div>
 	<div style="float: left;">
 		<p>
-			<%= @organizational_unit.description.first %>
+			<%= @organizational_unit.description_text %><br/>
+			<%= @organizational_unit.extensions.size %>
 		</p>
 	</div>
 	
 </div>
 </div>
 <div class="content">
-	<%= content_header("Branch Servers", "h2") %>
+	<%= content_header("Branch Servers", "h2
+	") %>
 	<div class="content-header-menu">
 		<%= link_to "Add Branch Server", new_scbranchserver_path(:location => @organizational_unit.dn)  %> 
 	</div>

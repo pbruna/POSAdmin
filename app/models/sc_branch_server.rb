@@ -15,8 +15,9 @@ module ScBranchServer
   
   def services
     hash = Hash.new
+    ScService.model_bases self.dn
     ScService.all.each do |object|
-      hash[object.cn.first] = object.scServiceStatus if object.parent.dn == "#{self.dn}"
+      hash[object.cn.first.to_sym] = object.scServiceStatus
     end
     hash
   end
@@ -31,11 +32,8 @@ module ScBranchServer
   end
 
   def network_card
-    array = []
-    ScNetworkCard.filter(:objectclass => "scNetworkcard").all.each do |object|
-      array << object if object.parent.dn == "#{self.dn}"
-    end
-    array.first
+    ScNetworkCard.model_bases self.dn
+    ScNetworkCard.all.first
   end
 
   def network_card_ip_address
@@ -70,9 +68,6 @@ module ScBranchServer
     branch_server
   end
 
-  def self.all
-    Treequel::Model.directory.filter(:objectClass => self.model_objectclasses)
-  end
 
   def after_create( mods )
     self.object_class << "top"

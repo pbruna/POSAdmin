@@ -10,7 +10,7 @@ module OrganizationalUnit
   extend Global::Class
 
   model_class Treequel::Model
-  model_bases self.base_dn
+  #model_bases self.base_dn
   model_objectclasses :organizationalUnit
   main_attribute "ou"
 
@@ -56,18 +56,6 @@ module OrganizationalUnit
 
   def posdevices_qty
     "To Be Done"
-  end
-
-
-
-  def self.find(params)
-    array = params.split(/,/)
-    hash = {}
-    array.each do |e|
-      k, v = e.split(/\=/)
-      hash[k] = v
-    end
-    filter(:ou => hash["ou"]).first
   end
 
   def self.for_select

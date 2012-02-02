@@ -1,11 +1,14 @@
-include PosAdmin::Connection
+include Global::Instance
+include Validations
 
 module ScServerContainer
   extend Treequel::Model::ObjectClass
+  extend Global::Class
 
   model_class Treequel::Model
   model_bases self.base_dn
   model_objectclasses :scServerContainer
+  main_attribute "cn"
   
   def self.create_default(parent)
     server_container = create("cn=server,#{parent}")

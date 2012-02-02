@@ -1,4 +1,4 @@
-include PosAdmin::Connection
+require 'POSAdmin/connection'
 
 module  Global
   module Instance
@@ -10,7 +10,6 @@ module  Global
           child.destroy
         rescue Exception => e
           puts e.message
-          puts e.backtrace.inspect
           return false
         end
         true
@@ -27,11 +26,7 @@ module  Global
     end
 
     def description_text
-      if defined?(description)
-        description.join("\n")
-      else
-        nil
-      end
+      respond_to?(:description) ? description.join("\n") : nil
     end
 
     def short_name
@@ -57,17 +52,21 @@ module  Global
     def ou_name
       ou_dn.split(/,/)[0].split(/\=/)[1]
     end
-    
+
     def update!(attributes)
-      if attributes[main_attribute.to_sym]
+      rdn = ""
+      if attributes[main_attribute.to_sym] != self.send(self.send("main_attribute"))
         rdn = "#{main_attribute}=#{attributes[main_attribute.to_sym]},#{base}"
-        attributes.delete(main_attribute.to_sym) # We remove the main attribute to avoid a LDAP Error
-        update(attributes)
-        move(rdn)
-      else
-        update(attributes)
+        attributes.delete(main_attribute.to_sym)
       end
-      self
+      # extensions.first devuelve el modelo
+      entry = extensions.first.create(self.dn, attributes)
+      if entry.save
+        entry.move(rdn) unless rdn.blank?
+        entry
+      else
+        false
+      end
     end
 
   end
@@ -75,11 +74,18 @@ module  Global
   module Class
 
     def all
-      array = []
-      Treequel::Model.directory.filter(:objectClass => self.model_objectclasses).each do |ou|
-        array << ou
-      end
-      array
+      #array = []
+      Treequel::Model.directory.filter(:objectClass => self.model_objectclasses) #.each do |ou|
+      #   array << ou
+      # end
+      # array
+    end
+
+    def find(id)
+      attrs, base = id.split(/,/,2)
+      name = attrs.split(/\=/)
+      query = {name[0].to_sym => name[1]}
+      filter(query).from(base).first
     end
 
     def main_attribute(attribute = nil)
@@ -89,7 +95,6 @@ module  Global
         raise RequiredValueNotDeclared, "You must declare a value for main_attribute in your model"
       end
     end
-
   end
 
 end

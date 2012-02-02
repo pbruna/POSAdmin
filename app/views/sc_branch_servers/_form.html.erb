@@ -1,8 +1,11 @@
+<% content_for :form_errors do %>
+	<%=  errors_to_list(@scLocation.errors)  if @scLocation.respond_to?(:errors)%>
+<% end %>
 <%= form_tag(options_for_form_tag(action)[0],options_for_form_tag(action)[1]) do %>
 
 	<fieldset>
 		<legend>Choose Location</legend>
-		<% if params[:action] == "edit" %>
+		<% if params[:action] == "edit" || params[:action] == "update" %>
 		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection, scLocation.parent_dn)  %>
 		<% else %>
 		<%= select_tag "scLocation[parent]", options_for_select(@organizational_unit_collection, params[:location])  %>

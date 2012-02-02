@@ -11,6 +11,7 @@
 # - associatedDomain: may
 # - userPassword: must
 include Global::Instance
+include Validations
 
 module ScLocation
   extend Treequel::Model::ObjectClass
@@ -78,15 +79,12 @@ module ScLocation
   end
 
   def branch_server
-    array = []
-    ScBranchServer.filter(:objectclass => "scBranchServer").all.each do |object|
-      array << object if object.parent.dn == "cn=server,#{self.dn}"
-    end
-    array.first
+    ScBranchServer.model_bases self.dn
+    ScBranchServer.all.first
   end
 
   def server_container
-    ScServerContainer.create("cn=server,#{self.dn}")
+    ScServerContainer.find("cn=server,#{self.dn}")
   end
 
   def pos_devices_qty
@@ -97,16 +95,30 @@ module ScLocation
     branch_server.network_card_ip_address
   end
 
-  def self.create_new(params)
+  def self.create_from_form(params)
     dn = "cn=#{params[:cn]},#{params[:parent]}"
     attrs = build_attributes(params)
     sc_location = create(dn, attrs)
   end
 
+  def update_from_form(params)
+    attrs = ScLocation.build_attributes(params)
+    update!(attrs)
+  end
+
   def after_create( mods )
     self.object_class << "top"
     self.save
+    create_container_and_branch(self.dn)
   end
+
+  def validate(options = {})
+    validates_ip_format_of :ipNetworkNumber
+    super
+  end
+
+  
+
 
   def self.build_attributes(params)
     attrs = {
@@ -116,8 +128,8 @@ module ScLocation
       :scDefaultGw => params[:scDefaultGw],
       :scWorkstationBaseName => params[:scWorkstationBaseName],
       :ipNetmaskNumber => params[:ipNetmaskNumber],
-      :scDynamicIp => "TRUE",
-      :scDhcpExtern => "FALSE",
+      :scDynamicIp => true,
+      :scDhcpExtern => false,
       :ipNetworkNumber => params[:ipNetworkNumber],
       :scDhcpFixedRange => "#{params[:scDhcpFixedRange_start]},#{params[:scDhcpFixedRange_end]}",
       :userPassword => params[:userPassword]
@@ -125,4 +137,9 @@ module ScLocation
     attrs
   end
 
+  private
+  def create_container_and_branch(parent_dn)
+    container = ScServerContainer.create_default(parent_dn)
+    branch_server = ScBranchServer.create_default(container.dn)
+  end
 end

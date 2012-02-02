@@ -1,45 +1,37 @@
 class BranchServerFactory
 
-  attr_accessor :location, :network_card, :enabled_services, :sc_location
+  #attr_accessor :location, :network_card, :enabled_services, :sc_location, :sc_networkcard
 
   def initialize(params)
-    @network_card = params[:scLocation].delete("scNetworkcard")
-    @enabled_services = params[:scLocation].delete("scService")
-    @location = params[:scLocation]
-    @sc_location = ScLocation.create(params[:id]) if params[:id]
-    @attributes = ScLocation.build_attributes(@location)
+    @network_card_params = params[:scLocation].delete(:scNetworkcard)
+    @services_params = params[:scLocation].delete(:scService)
+    @location_params = params[:scLocation]
+    @id = params[:id] unless params[:id].nil?
   end
 
-  def location_dn
-    @sc_location.dn
+  def save
+    sc_location = ScLocation.create_from_form(@location_params)
+    sc_networkcard = ScNetworkCard.create_from_form(@network_card_params, sc_location)
+    if sc_location.save && sc_networkcard.save
+      services = ScService.create_or_update_from_form(@services_params, sc_location)
+      sc_location
+    else
+      sc_location.delete_with_childrens! unless sc_location.nil?
+      false
+    end
   end
+
 
 
   def update
-    @sc_networkcard = ScNetworkCard.create(@sc_location.network_card_dn)
-    @sc_networkcard.update!(@network_card)
-    @sc_location.update!(@attributes)
-    ScService.create_and_save(@enabled_services,@sc_location)
-  end
-
-
-  def save
-    if self.save_location_and_branch_server
-      network_card = ScNetworkCard.create_new(@network_card,@sc_location)
-      if network_card.save
-        if ScService.create_and_save(@enabled_services,@sc_location)
-          return true
-        else
-          network_card.destroy
-          self.destroy_location_and_branch_server
-          return false
-        end
-      else
-        self.destroy_location_and_branch_server
-        return false
-      end
+    sc_location = ScLocation.find(@id)
+    sc_networkcard = sc_location.branch_server.network_card
+    services = ScService.create_or_update_from_form(@services_params, sc_location)
+    if sc_networkcard.update!(@network_card_params) 
+      sc_location = sc_location.update_from_form(@location_params)
     else
-      return false
+      sc_networkcard.save
+      false
     end
   end
 
@@ -91,7 +83,7 @@ class BranchServerFactory
       if server_container.save
         server_container
       else
-        fale
+        false
       end
     end
 

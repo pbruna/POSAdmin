@@ -9,3 +9,9 @@ test:
     password: "suse.10"
     server: "10.211.55.5"
     base_dn: "o=cruzverde,c=cl"
+
+production:
+    username: "cn=admin,o=cruzverde,c=cl"
+    password: "suse.10"
+    server: "10.211.55.5"
+    base_dn: "o=cruzverde,c=cl"

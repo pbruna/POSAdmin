@@ -7,31 +7,23 @@ module ScService
   model_class Treequel::Model
   model_bases self.base_dn
   model_objectclasses :scService
+  main_attribute "cn"
 
   SERVICES = %w(dhcp dns tftp)
 
-  def self.create_and_save(params,grand_grand_parent)
+  def self.create_or_update_from_form(params,sc_location)
+    services = {}
     params = params.nil? ? Hash.new : params
-    parent_dn = "cn=branch_server,cn=server,#{grand_grand_parent.dn}"
     SERVICES.each do |service_name|
       begin
-        status = params[service_name.to_sym].nil? ? "FALSE" : "TRUE"
-        s = create_service(service_name,parent_dn,grand_grand_parent.server_ip_address,status)
-        unless s.exists?
-          s.save
-        else
-          s.modify(:scServiceStatus => "TRUE")
-          s.save
-        end
-        s.modify(:scServiceStatus => status)
+        status = params[service_name.to_sym].nil? ? false : true
+        service = create_service(service_name,sc_location,status)
+        services[service_name.to_sym] = service if service.save
       rescue Exception => e
-        puts e.message
-        puts e.backtrace.inspect
-        false
+        raise e.message
       end
     end
-    
-    true
+    services
   end
 
   def after_create( mods )
@@ -40,12 +32,12 @@ module ScService
   end
 
   private
-    def self.create_service(service_name,parent_dn,branch_ip_address,status)
-      s = create("cn=#{service_name},#{parent_dn}")
-      s.scServiceName = service_name
-      s.scServiceStatus = "TRUE"
-      s.scDnsName = service_name
-      s.scServiceStartScript = case service_name
+    def self.create_service(service_name,sc_location,status)
+      service = create("cn=#{service_name},cn=branch_server,cn=server,#{sc_location.dn}")
+      service.scServiceName = service_name
+      service.scServiceStatus = status
+      service.scDnsName = service_name
+      service.scServiceStartScript = case service_name
           when "dns"
             "named"
           when "dhcp"
@@ -53,8 +45,8 @@ module ScService
           when "tftp"
             "tftpd"
           end
-      s.ipHostNumber = branch_ip_address
-      s
+      service.ipHostNumber = sc_location.branch_server_ip_address
+      service
     end
 
 end

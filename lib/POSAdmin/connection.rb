@@ -1,10 +1,9 @@
 include PosAdmin::Config
-
 module PosAdmin
   module Connection
-    require 'treequel/model'
-    require 'treequel/model/objectclass'
 
+    Treequel::Model::DEFAULT_SAVE_OPTIONS = {}
+    
     Treequel::Model.directory = Treequel.directory(
       :host => self.server,
       :base_dn => self.base_dn,

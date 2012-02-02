@@ -25,10 +25,10 @@ module ScNetworkCard
     scDevice.first
   end
   
-  def self.create_new(params,parent)
-    parent_dn = "cn=branch_server,cn=server,#{parent.dn}"
-    network_card = create("scDevice=#{params['scDevice']},#{parent_dn}")
-    network_card.ipHostNumber = params['ipHostNumber']
+  def self.create_from_form(params,sc_location)
+    parent_dn = "cn=branch_server,cn=server,#{sc_location.dn}"
+    network_card = create("scDevice=#{params[:scDevice]},#{parent_dn}")
+    network_card.ipHostNumber = params[:ipHostNumber]
     network_card
   end
 

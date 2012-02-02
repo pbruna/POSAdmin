@@ -1,10 +1,11 @@
 class OrganizationalUnitsController < ApplicationController
+  
   def index
     @organizational_units = OrganizationalUnit.all
   end
   
   def show
-    @organizational_unit = OrganizationalUnit.create(params[:id])
+    @organizational_unit = OrganizationalUnit.find(params[:id])
   end
   
   def edit

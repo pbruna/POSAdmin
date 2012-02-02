@@ -55,3 +55,7 @@
 fieldset legend {
 	padding-left: 0px;
 }
+
+.error li{
+	color: white;
+}

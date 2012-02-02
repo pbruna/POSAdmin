@@ -26,6 +26,9 @@
 				<div id="alert" class="alert-message error" data-alert>
 					<a class="close" href="#">×</a>
 					<p><%= flash[:alert] %></p>
+					<div>
+						<%= yield :form_errors %>
+					</div>
 				</div>
 			<% end %>
 			<%= yield %>
