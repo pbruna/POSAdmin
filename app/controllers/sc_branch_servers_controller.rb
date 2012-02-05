@@ -24,12 +24,16 @@ class ScBranchServersController < ApplicationController
   end
 
   def create    
-    if @branch_server_factory.save
+    @scLocation = @branch_server_factory.save
+    if @scLocation.errors.size == 0
+      logger.debug("lo guardo")
       flash[:notice] = "Branch Server created!"
       redirect_to scbranchserver_path(@branch_server_factory.location_dn)
     else
+      logger.debug("FALLO")
+      @organizational_unit_collection = OrganizationalUnit.for_select
       flash.now[:alert] = "Branch Server not created!"
-      format.html { render :action => "new"}
+      render :action => "new"
     end
   end
 
@@ -45,11 +49,11 @@ class ScBranchServersController < ApplicationController
   end
 
   def update
-    if @scLocation = @branch_server_factory.update
+    @scLocation = @branch_server_factory.update
+    if @scLocation.errors.size == 0
       flash[:notice] = "Branch Server updated correctly"
       redirect_to scbranchserver_path(@scLocation.dn)
     else
-      @scLocation = ScLocation.find(params[:id])
       @organizational_unit_collection = OrganizationalUnit.for_select
       flash.now[:alert] = "Error while updating Branch Server. Please correct the following errors:"
       render :action => :edit

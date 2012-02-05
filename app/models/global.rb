@@ -65,7 +65,7 @@ module  Global
         entry.move(rdn) unless rdn.blank?
         entry
       else
-        false
+        entry
       end
     end
 

@@ -30,6 +30,27 @@ module ScLocation
     end
   end
 
+  def scNetworkcard=(hash = {})
+    network_card = ScNetworkCard.create_from_form(hash,self)
+    network_card.save
+  end
+
+  def branch_server_network_card
+    branch_server.network_card_device
+  end
+
+  def network_card_dn
+    branch_server.network_card_dn
+  end
+
+  def scNetworkcard(param)
+    hash = {
+      :scDevice => self.branch_server_network_card,
+      :ipHostNumber => self.branch_server_ip_address
+    }
+    hash[param.to_sym]
+  end
+
   def scDhcpRange_start
     scDhcpRange.split(/,/).first
   end
@@ -52,22 +73,6 @@ module ScLocation
 
   def branch_server_ip_address
     branch_server.network_card_ip_address
-  end
-
-  def branch_server_network_card
-    branch_server.network_card_device
-  end
-
-  def network_card_dn
-    branch_server.network_card_dn
-  end
-
-  def scNetworkcard(param)
-    hash = {
-      :scDevice => self.branch_server_network_card,
-      :ipHostNumber => self.branch_server_ip_address
-    }
-    hash[param.to_sym]
   end
 
   def scService(param)
@@ -113,7 +118,8 @@ module ScLocation
   end
 
   def validate(options = {})
-    validates_ip_format_of :ipNetworkNumber
+    validates_ip_format_of :ipNetworkNumber, :ipNetmaskNumber, :scDhcpRange_start, :scDhcpRange_end
+    validates_ip_format_of :scDefaultGw, :scDhcpFixedRange_start, :scDhcpFixedRange_end
     super
   end
 

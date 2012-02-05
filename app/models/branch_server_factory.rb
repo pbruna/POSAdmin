@@ -14,11 +14,10 @@ class BranchServerFactory
     sc_networkcard = ScNetworkCard.create_from_form(@network_card_params, sc_location)
     if sc_location.save && sc_networkcard.save
       services = ScService.create_or_update_from_form(@services_params, sc_location)
-      sc_location
     else
       sc_location.delete_with_childrens! unless sc_location.nil?
-      false
     end
+    sc_location
   end
 
 
@@ -31,7 +30,7 @@ class BranchServerFactory
       sc_location = sc_location.update_from_form(@location_params)
     else
       sc_networkcard.save
-      false
+      sc_location
     end
   end
 

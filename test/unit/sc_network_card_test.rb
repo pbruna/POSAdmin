@@ -41,6 +41,12 @@ class ScNetworkCardTest < ActiveSupport::TestCase
     assert_not_equal(network_card.dn, updated_network_card.dn)
   end
 
+  test "No se debe guardar si la IP no tiene formato correcto" do
+    @params[:ipHostNumber] = "mdsaopmdpoam"
+    network_card = ScNetworkCard.create_from_form(@params,@sc_location)
+    assert(!network_card.save, "Se guardo con formato incorrecto")
+  end
+
   private
   def create_location
     sc_location = ScLocation.create(@dn,

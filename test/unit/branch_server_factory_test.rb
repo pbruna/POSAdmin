@@ -24,8 +24,15 @@ class BranchServerFactoryTest < ActiveSupport::TestCase
     branch_server_factory = BranchServerFactory.new(new_params)
     location_new = branch_server_factory.update
     assert_not_equal(location_old.dn, location_new.dn)
-    #assert_not_equal(location_old.network_card_dn, location_new.network_card_dn)
-    #assert_not_equal(location_old.services[:dhcp], location_new.services[:dhcp])
+  end
+
+  test "Se deben devolver errores cuando no se pueda guardar" do
+    @params[:scLocation][:scNetworkcard][:ipHostNumber] = "dmskadmkla"
+    #@params[:scLocation][:ipNetworkNumber] = "dmopadmpa"
+    #@params[:scLocation][:scDhcpRange_start] = "dnoiandoa"
+    branch_server_factory = BranchServerFactory.new(@params)
+    location = branch_server_factory.save
+    assert_not_equal(0, location.errors.size)
   end
 
   private
@@ -46,9 +53,9 @@ class BranchServerFactoryTest < ActiveSupport::TestCase
       :ipNetmaskNumber => "255.255.255.0",
       :scDefaultGw => "192.168.1.2",
       :scDhcpRange_start => "192.168.1.100",
-      :scDhcpRange_end => "192.168.110",
-      :scDhcpFixedRange_start => "192.168.200",
-      :scDhcpFixedRange_end => "192.168.210",
+      :scDhcpRange_end => "192.168.1.110",
+      :scDhcpFixedRange_start => "192.168.1.200",
+      :scDhcpFixedRange_end => "192.168.1.210",
       :scDynamicIp => true,
       :scDhcpExtern => false,
       :userPassword => "suse.10",

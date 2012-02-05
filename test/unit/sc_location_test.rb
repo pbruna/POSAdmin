@@ -82,12 +82,33 @@ class ScLocationTest < ActiveSupport::TestCase
     assert_not_nil(branch)
   end
 
-private
-def new_location_from_params
-  params = build_location_params[:scLocation]
-  params[:cn] = @cn
-  params[:parent] = @parent
-  location = ScLocation.create_from_form(params)
-end
+  test "No se debe guardar si las IP no tienen el formato correcto" do
+    params = build_location_params[:scLocation]
+    params[:cn] = @cn
+    params[:parent] = @parent
+    params[:ipNetmaskNumber] = "dnsaindoa"
+    location = ScLocation.create_from_form(params)
+    assert(!location.save, "Se guardo con malas direcciones")
+  end
+
+
+  test "Debe guardar la informacion de la tarjeta de red" do
+    params = build_location_params[:scLocation]
+    params[:cn] = @cn
+    params[:parent] = @parent
+    params[:scNetworkcard] = { :ipHostNumber => "192.168.0.2", :scDevice => "eth0" }
+    location = ScLocation.create_from_form(params)
+    location.save
+    network_card = ScNetworkCard.find("scDevice=eth0,cn=branch_server,cn=server,#{location.dn}")
+    assert_not_nil(network_card)
+  end
+
+  private
+  def new_location_from_params
+    params = build_location_params[:scLocation]
+    params[:cn] = @cn
+    params[:parent] = @parent
+    location = ScLocation.create_from_form(params)
+  end
 
 end

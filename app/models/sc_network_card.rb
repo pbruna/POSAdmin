@@ -5,8 +5,8 @@
 # - scModul: may
 # - scModulOption: may
 # - ipNetmaskNumber: may
-
 include Global::Instance
+include Validations
 
 module ScNetworkCard
   extend Treequel::Model::ObjectClass
@@ -35,6 +35,10 @@ module ScNetworkCard
   def after_create( mods )
     self.object_class << "top"
     self.save
+  end
+
+  def validate(options = {})
+    validates_ip_format_of :ipHostnumber
   end
 
 end
