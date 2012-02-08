@@ -28,7 +28,7 @@ class ScBranchServersController < ApplicationController
     if @scLocation.errors.size == 0
       logger.debug("lo guardo")
       flash[:notice] = "Branch Server created!"
-      redirect_to scbranchserver_path(@branch_server_factory.location_dn)
+      redirect_to scbranchserver_path(@scLocation.dn)
     else
       logger.debug("FALLO")
       @organizational_unit_collection = OrganizationalUnit.for_select

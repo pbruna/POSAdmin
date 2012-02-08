@@ -12,10 +12,16 @@ class BranchServerFactory
   def save
     sc_location = ScLocation.create_from_form(@location_params)
     sc_networkcard = ScNetworkCard.create_from_form(@network_card_params, sc_location)
-    if sc_location.save && sc_networkcard.save
+
+    are_good_to_be_saved = (sc_location.valid? && sc_networkcard.valid?) ? true : false
+    if are_good_to_be_saved
+      sc_location.save
+      sc_networkcard.save
       services = ScService.create_or_update_from_form(@services_params, sc_location)
     else
-      sc_location.delete_with_childrens! unless sc_location.nil?
+      if sc_networkcard.errors.count > 0
+        sc_location.errors.add("ipHostNumber", sc_networkcard.errors[:ipHostnumber].first)
+      end
     end
     sc_location
   end
@@ -26,12 +32,12 @@ class BranchServerFactory
     sc_location = ScLocation.find(@id)
     sc_networkcard = sc_location.branch_server.network_card
     services = ScService.create_or_update_from_form(@services_params, sc_location)
-    if sc_networkcard.update!(@network_card_params) 
-      sc_location = sc_location.update_from_form(@location_params)
-    else
-      sc_networkcard.save
-      sc_location
+    sc_networkcard = sc_networkcard.update!(@network_card_params) 
+    sc_location = sc_location.update_from_form(@location_params)
+    if sc_networkcard.errors.count > 0
+      sc_location.errors.add("ipHostNumber", sc_networkcard.errors[:ipHostnumber].first)
     end
+    sc_location
   end
 
 

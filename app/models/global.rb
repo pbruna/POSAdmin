@@ -4,16 +4,18 @@ module  Global
   module Instance
 
     def delete_childrens!
-      childs = all_childrens
-      childs.each do |child|
-        begin
-          child.destroy
-        rescue Exception => e
-          puts e.message
-          return false
-        end
-        true
+      if has_childrens?
+        childs = all_childrens
+        childs.each do |child|
+          begin
+            child.destroy
+          rescue Exception => e
+            puts e.message
+            return false
+          end
+        end      
       end
+      true
     end
 
     def all_childrens
@@ -23,6 +25,10 @@ module  Global
       end
       childs.shift # remove self from the Array
       childs.reverse # The last goes first
+    end
+
+    def has_childrens?
+      scope(:sub).all.size > 0 ? true : false
     end
 
     def description_text
